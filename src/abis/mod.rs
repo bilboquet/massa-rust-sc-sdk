@@ -2,4 +2,5 @@
 // directly and this module is not public.
 mod abort;
 pub mod echo;
+pub mod generate_event;
 pub mod log;

@@ -1,5 +1,5 @@
 use crate::{
-    abi::proto::massa::abi::v1::LogRequest, alloc::string::String,
+    abi::proto::massa::abi::v1::GenerateEventRequest, alloc::string::String,
     allocator::EncodeLengthPrefixed,
 };
 
@@ -17,7 +17,7 @@ use cfg_if::cfg_if;
 extern "C" {
     // may be use to "rename" a function
     // #[link_name = "actual_symbol_name"]
-    fn abi_log(arg: u32) -> u32;
+    fn abi_generate_event(arg: u32) -> u32;
 }
 
 // ****************************************************************************
@@ -25,12 +25,12 @@ extern "C" {
 // Interface between the sdk and the SC i.e. seen by the user
 // Wrapped function to "hide" unsafe and manage serialize/deserialize of the
 // parameters
-fn impl_log(arg: String) {
+fn impl_generate_event(event: String) {
     // serialize the arguments with protobuf then length prefix it
-    let arg_ptr = (LogRequest { message: arg }).encode_length_prefixed();
+    let arg_ptr = GenerateEventRequest { event }.encode_length_prefixed();
 
     // call the function from the abi
-    unsafe { abi_log(arg_ptr) };
+    unsafe { abi_generate_event(arg_ptr) };
 }
 
 // ****************************************************************************
@@ -44,19 +44,19 @@ cfg_if! {
         // Should we leave it up to the user to implement the mock?
         // Should we mock at the abi_level?
         // Can mockall do the job?
-        fn mock_log(arg: String)  {
-            println!("{}", arg);
+        fn mock_generate_event(event: String)  {
+            println!("{}", event);
         }
     }
 }
 
-pub fn log(arg: String) {
+pub fn generate_event(event: String) {
     cfg_if! {
         if #[cfg(feature = "testing")]    {
-            mock_log(arg)
+            mock_generate_event(event)
         }
          else {
-            impl_log(arg)
+            impl_generate_event(event)
         }
     }
 }

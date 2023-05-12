@@ -107,6 +107,21 @@ pub(super) fn encode_length_prefixed(data: Vec<u8>) -> u32 {
     }
 }
 
+pub(super) trait EncodeLengthPrefixed {
+    fn encode_length_prefixed(self) -> u32;
+}
+
+impl<T> EncodeLengthPrefixed for T
+where
+    T: prost::Message,
+{
+    fn encode_length_prefixed(self) -> u32 {
+        // FIXME see encode_length_delimited_to_vec(&self) -> Vec<u8> in prost
+        // to use self.encoded_len(); to prevent copies
+        encode_length_prefixed(self.encode_to_vec())
+    }
+}
+
 #[cfg(feature = "testing")]
 // The below functions will only be compiled and available during tests,
 pub(super) mod test {

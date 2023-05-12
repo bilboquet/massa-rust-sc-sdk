@@ -1,11 +1,11 @@
-use crate::alloc::vec::Vec;
+use crate::{
+    abi::proto::massa::abi::v1::{TestRequest, TestResponse},
+    alloc::vec::Vec,
+    allocator::get_parameters,
+    allocator::EncodeLengthPrefixed,
+};
 use cfg_if::cfg_if;
 use prost::Message;
-
-// Include the `abi` module, which is generated from the proto files.
-use crate::abi::proto::massa::abi::v1::{TestRequest, TestResponse};
-use crate::allocator::encode_length_prefixed;
-use crate::allocator::get_parameters;
 
 // ****************************************************************************
 // Function from the abi used by the SC
@@ -29,10 +29,7 @@ extern "C" {
 // parameters
 fn impl_echo(arg: Vec<u8>) -> Vec<u8> {
     // serialize the arguments with protobuf
-    let req = TestRequest { message_in: arg };
-    let req_bytes = req.encode_to_vec();
-
-    let arg_ptr: u32 = encode_length_prefixed(req_bytes);
+    let arg_ptr = TestRequest { message_in: arg }.encode_length_prefixed();
 
     // call the function from the abi
     let resp_ptr = unsafe { abi_echo(arg_ptr) };
