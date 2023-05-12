@@ -17,14 +17,14 @@ pub use alloc::{
 };
 
 mod abi;
-pub(crate) mod abis;
+pub mod abis;
 mod allocator;
 
-pub(crate) fn get_parameters(arg_ptr: u32) -> Vec<u8> {
+pub fn get_parameters(arg_ptr: u32) -> Vec<u8> {
     allocator::get_parameters(arg_ptr)
 }
 
-pub(crate) fn encode_length_prefixed(data: Vec<u8>) -> u32 {
+pub fn encode_length_prefixed(data: Vec<u8>) -> u32 {
     allocator::encode_length_prefixed(data)
 }
 
@@ -32,7 +32,7 @@ pub(crate) fn encode_length_prefixed(data: Vec<u8>) -> u32 {
 // a bunch of functions to simulate the host
 // ****************************************************************************
 #[cfg(test)]
-pub(crate) mod test {
+pub mod test {
     use super::alloc::vec::Vec;
     use super::allocator;
 
