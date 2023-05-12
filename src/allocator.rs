@@ -31,14 +31,14 @@ use alloc::vec::Vec;
 
 static mut SHARED_MEM: Vec<u8> = Vec::new();
 
-#[cfg(test)]
+#[cfg(feature = "testing")]
 static mut IS_SHARED_MEM_CONSUMED: bool = true;
 
 #[no_mangle]
 #[export_name = "__alloc"]
 fn myalloc(size: u32) -> u32 {
     unsafe {
-        #[cfg(test)]
+        #[cfg(feature = "testing")]
         {
             use log::warn;
 
@@ -65,7 +65,7 @@ pub(super) fn get_parameters(arg_ptr: u32) -> Vec<u8> {
     // This is a check to ensure that the memory is not consumed twice.
     // Only useful for tests while developing.
     // The assert below has a broader scope but is less explicit.
-    #[cfg(test)]
+    #[cfg(feature = "testing")]
     unsafe {
         if IS_SHARED_MEM_CONSUMED {
             panic!(
@@ -79,7 +79,7 @@ pub(super) fn get_parameters(arg_ptr: u32) -> Vec<u8> {
 
     // take the parameter
     unsafe {
-        #[cfg(test)]
+        #[cfg(feature = "testing")]
         {
             IS_SHARED_MEM_CONSUMED = true;
         }
@@ -107,13 +107,12 @@ pub(super) fn encode_length_prefixed(data: Vec<u8>) -> u32 {
     }
 }
 
-#[cfg(test)]
+#[cfg(feature = "testing")]
 // The below functions will only be compiled and available during tests,
 pub(super) mod test {
     use super::alloc::vec::Vec;
     use crate::allocator::{get_parameters, myalloc, SHARED_MEM};
 
-    #[cfg(test)]
     // Function that writes the [u8] argument to SHARED_MEM
     pub(crate) fn host_write_buffer(data: &[u8]) -> u32 {
         let buf_ptr = myalloc(data.len().try_into().expect("size fit in u32"));
@@ -124,7 +123,6 @@ pub(super) mod test {
         buf_ptr
     }
 
-    #[cfg(test)]
     // Function that reads the [u8] argument from SHARED_MEM
     pub(crate) fn host_read_buffer(arg_ptr: u32) -> Vec<u8> {
         let arg = get_parameters(arg_ptr);

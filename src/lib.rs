@@ -7,9 +7,20 @@
 // For now, I will use the default allocator which is
 // dlmalloc: https://docs.rs/dlmalloc/latest/dlmalloc/
 
+// ****************************************************************************
+// Main target of this crate is wasm32-unknown-unknown and we want to override
+// panic. For this purpose we need to use the no_std attribute. But for testing
+// it is easier to stay on the default target, hence we go no_std by default but
+// add crate std (revert no_std) for testing.
+// ****************************************************************************
 #![no_std]
 
+#[cfg(not(target_arch = "wasm32"))]
+extern crate std;
+// ****************************************************************************
+
 extern crate alloc;
+
 pub use alloc::{
     format,
     string::{String, ToString},
@@ -31,21 +42,28 @@ pub fn encode_length_prefixed(data: Vec<u8>) -> u32 {
 // ****************************************************************************
 // a bunch of functions to simulate the host
 // ****************************************************************************
-#[cfg(test)]
+#[cfg(feature = "testing")]
 pub mod test {
+    // extern crate std;
+
     use super::alloc::vec::Vec;
     use super::allocator;
 
-    // The below functions will only be compiled and available during tests,
-    #[cfg(test)]
     /// Simulate arguments passed by the host to the SC
     pub fn host_write_buffer(data: &[u8]) -> u32 {
         allocator::test::host_write_buffer(data)
     }
 
-    #[cfg(test)]
     /// Simulate reading arguments passed by the host to the SC
     pub fn host_read_buffer(arg_ptr: u32) -> Vec<u8> {
         allocator::test::host_read_buffer(arg_ptr)
     }
+}
+
+#[test]
+fn test_basic_build() {
+    extern crate std;
+    use std::println;
+
+    println!("test_basic: ok");
 }

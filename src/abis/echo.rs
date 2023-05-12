@@ -49,7 +49,7 @@ fn impl_echo(arg: Vec<u8>) -> Vec<u8> {
 // mocked version of the abi so one can dev and write tests without the need
 // to call the host
 cfg_if! {
-    if #[cfg(test)] {
+    if #[cfg(feature = "testing")] {
         extern crate std;
         use std::dbg;
 
@@ -78,7 +78,7 @@ cfg_if! {
 
 pub fn echo(arg: Vec<u8>) -> Vec<u8> {
     cfg_if! {
-        if #[cfg(test)]    {
+        if #[cfg(feature = "testing")] {
             mock_echo(arg)
         }
          else {

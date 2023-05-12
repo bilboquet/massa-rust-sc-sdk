@@ -1,12 +1,12 @@
 use crate::alloc::string::String;
-
 use crate::allocator::encode_length_prefixed;
 
 // ****************************************************************************
 // Override the panic handler to call the abort function from the abi
 // ****************************************************************************
 
-#[cfg(not(test))]
+#[cfg(target_arch = "wasm32")]
+#[cfg(not(feature = "testing"))]
 #[panic_handler]
 fn panic_handler(info: &core::panic::PanicInfo) -> ! {
     use crate::alloc::format;

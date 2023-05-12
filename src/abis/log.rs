@@ -43,7 +43,7 @@ fn impl_log(arg: String) {
 // mocked version of the abi so one can dev and write tests without the need
 // to call the host
 cfg_if! {
-    if #[cfg(test)] {
+    if #[cfg(feature = "testing")] {
         extern crate std;
         use std::println;
 
@@ -58,7 +58,7 @@ cfg_if! {
 
 pub fn log(arg: String) {
     cfg_if! {
-        if #[cfg(test)]    {
+        if #[cfg(feature = "testing")]    {
             mock_log(arg)
         }
          else {

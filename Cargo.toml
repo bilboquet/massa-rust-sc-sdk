@@ -15,7 +15,7 @@ prost = { version = "0.11.9", default-features = false, features = [
 prost-types = { version = "0.11.9", default-features = false }
 cfg-if = "1.0.0"
 dlmalloc = { version = "0.2.4", features = ["global"] }
-# mockall = { version = "0.11.4", features = ["nightly"] }
+log = "0.4.14"
 
 [build-dependencies]
 prost-build = "0.11.9" # specify exact version to ensure determinism
@@ -26,6 +26,7 @@ log = "0.4.14"
 
 [features]
 prost-build = []
+testing = []
 
 [profile.release]
 debug = true
