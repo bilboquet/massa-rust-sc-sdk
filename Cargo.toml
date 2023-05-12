@@ -1,0 +1,33 @@
+[package]
+name = "massa-rust-sc-sdk"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+prost = { version = "0.11.9", default-features = false, features = [
+    "prost-derive",
+] } # specify the exact version to ensure determinism
+prost-types = { version = "0.11.9", default-features = false }
+cfg-if = "1.0.0"
+dlmalloc = { version = "0.2.4", features = ["global"] }
+# mockall = { version = "0.11.4", features = ["nightly"] }
+
+[build-dependencies]
+prost-build = "0.11.9" # specify exact version to ensure determinism
+glob = "0.3.1"
+
+[dev-dependencies]
+log = "0.4.14"
+
+[features]
+prost-build = []
+
+[profile.release]
+debug = true
+#strip = "debuginfo"
+#strip = true
