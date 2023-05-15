@@ -49,6 +49,8 @@ cfg_if! {
     if #[cfg(feature = "testing")] {
         extern crate std;
         use std::dbg;
+        use crate::allocator::encode_length_prefixed;
+ 
 
         // Should we leave it up to the user to implement the mock?
         // Should we mock at the abi_level?
