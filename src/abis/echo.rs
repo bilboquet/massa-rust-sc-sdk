@@ -58,10 +58,7 @@ cfg_if! {
         fn mock_echo(arg: Vec<u8>) -> Vec<u8> {
             dbg!("mocked echo");
 
-            let req = TestRequest {message_in: arg };
-            let req_bytes = req.encode_to_vec();
-
-            let arg_ptr: u32 = encode_length_prefixed(req_bytes);
+            let arg_ptr = TestRequest {message_in: arg }.encode_length_prefixed();
 
             // deserialize the returned value with protobuf
             let resp_bytes: Vec<u8> = get_parameters(arg_ptr);

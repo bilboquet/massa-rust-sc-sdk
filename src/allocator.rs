@@ -133,6 +133,7 @@ pub(super) mod test {
         let buf_ptr = myalloc(data.len().try_into().expect("size fit in u32"));
 
         unsafe {
+            SHARED_MEM.clear();
             SHARED_MEM.extend_from_slice(data);
         }
         buf_ptr
