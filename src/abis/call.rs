@@ -61,16 +61,15 @@ cfg_if! {
     if #[cfg(feature = "testing")] {
         extern crate std;
         use std::println;
-        use std::string::ToString;
 
         // Should we leave it up to the user to implement the mock?
         // Should we mock at the abi_level?
         // Can mockall do the job?
         fn mock_call(
-            address: String,
-            function: String,
-            arg: Vec<u8>,
-            call_coins: u64,
+            _address: String,
+            _function: String,
+            _arg: Vec<u8>,
+            _call_coins: u64,
         ) -> Result<Vec<u8>>  {
             println!("SC calld");
             Ok(Vec::new())

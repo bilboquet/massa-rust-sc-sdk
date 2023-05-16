@@ -55,7 +55,7 @@ cfg_if! {
         // Should we leave it up to the user to implement the mock?
         // Should we mock at the abi_level?
         // Can mockall do the job?
-        fn mock_create_sc(bytecode: Vec<u8>) -> Result<String>  {
+        fn mock_create_sc(_bytecode: Vec<u8>) -> Result<String>  {
             println!("SC created");
             Ok("fake_sc_address".to_string())
         }

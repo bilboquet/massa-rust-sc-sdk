@@ -150,7 +150,7 @@ pub(super) mod test {
 
         // The first 4 bytes of arg are the length of the argument in little
         // endian
-        let arg_len = u32::from_le_bytes(arg_len) as u32; // can't fail
+        let arg_len = u32::from_le_bytes(arg_len);
 
         // verify that the length is correct
         assert_eq!(arg_len + 4, arg.len() as u32);
