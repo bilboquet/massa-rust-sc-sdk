@@ -17,15 +17,21 @@
 
 #[cfg(not(target_arch = "wasm32"))]
 extern crate std;
-// ****************************************************************************
 
+// ****************************************************************************
+// Reexport alloc crate and anyhow crate
+// ****************************************************************************
 extern crate alloc;
 
 pub use alloc::{
+    borrow::ToOwned,
     format,
     string::{String, ToString},
     vec::Vec,
 };
+
+pub use anyhow::{anyhow, Result};
+// ****************************************************************************
 
 mod abi;
 pub mod abis;
