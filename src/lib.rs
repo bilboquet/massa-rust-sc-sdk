@@ -15,8 +15,8 @@
 // ****************************************************************************
 #![no_std]
 
-#[cfg(not(target_arch = "wasm32"))]
-extern crate std;
+// #[cfg(not(target_arch = "wasm32"))]
+// extern crate std;
 
 // ****************************************************************************
 // Reexport alloc crate and anyhow crate
@@ -28,9 +28,10 @@ pub use alloc::{
     format,
     string::{String, ToString},
     vec::Vec,
+    vec,
 };
 
-pub use anyhow::{anyhow, Result};
+// pub use anyhow::{anyhow, Result};
 // ****************************************************************************
 
 mod abi;

@@ -4,7 +4,7 @@ use crate::{
     allocator::get_parameters,
     allocator::EncodeLengthPrefixed,
 };
-use cfg_if::cfg_if;
+// use cfg_if::cfg_if;
 use prost::Message;
 
 // ****************************************************************************
@@ -45,38 +45,38 @@ fn impl_echo(arg: Vec<u8>) -> Vec<u8> {
 // ****************************************************************************
 // mocked version of the abi so one can dev and write tests without the need
 // to call the host
-cfg_if! {
-    if #[cfg(feature = "testing")] {
-        extern crate std;
-        use std::dbg;
- 
-        // Should we leave it up to the user to implement the mock?
-        // Should we mock at the abi_level?
-        // Can mockall do the job?
-        fn mock_echo(arg: Vec<u8>) -> Vec<u8> {
-            dbg!("mocked echo");
+// cfg_if! {
+//     if #[cfg(feature = "testing")] {
+//         extern crate std;
+//         use std::dbg;
 
-            let arg_ptr = TestRequest {message_in: arg }.encode_length_prefixed();
+//         // Should we leave it up to the user to implement the mock?
+//         // Should we mock at the abi_level?
+//         // Can mockall do the job?
+//         fn mock_echo(arg: Vec<u8>) -> Vec<u8> {
+//             dbg!("mocked echo");
 
-            // deserialize the returned value with protobuf
-            let resp_bytes: Vec<u8> = get_parameters(arg_ptr);
-            // drop the first 4 bytes as they are the length of the message
-            let resp_bytes: Vec<u8> = resp_bytes[4..].to_vec();
+//             let arg_ptr = TestRequest {message_in: arg }.encode_length_prefixed();
 
-            let resp: TestResponse = TestResponse::decode(resp_bytes.as_slice()).unwrap();
+//             // deserialize the returned value with protobuf
+//             let resp_bytes: Vec<u8> = get_parameters(arg_ptr);
+//             // drop the first 4 bytes as they are the length of the message
+//             let resp_bytes: Vec<u8> = resp_bytes[4..].to_vec();
 
-            resp.message_out
-        }
-    }
-}
+//             let resp: TestResponse = TestResponse::decode(resp_bytes.as_slice()).unwrap();
+
+//             resp.message_out
+//         }
+//     }
+// }
 
 pub fn echo(arg: Vec<u8>) -> Vec<u8> {
-    cfg_if! {
-        if #[cfg(feature = "testing")] {
-            mock_echo(arg)
-        }
-         else {
+    // cfg_if! {
+    //     if #[cfg(feature = "testing")] {
+    //         mock_echo(arg)
+    //     }
+    //      else {
             impl_echo(arg)
-        }
-    }
+    //     }
+    // }
 }

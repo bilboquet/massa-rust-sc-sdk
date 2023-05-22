@@ -1,10 +1,13 @@
 use crate::{
     abi::proto::massa::abi::v1::{Address, Amount, CallRequest, CallResponse},
-    alloc::{string::String, vec::Vec},
+    alloc::{
+        string::{String, ToString},
+        vec::Vec,
+    },
     allocator::{get_parameters, EncodeLengthPrefixed},
 };
-use anyhow::{anyhow, Result};
-use cfg_if::cfg_if;
+// use anyhow::{anyhow, Result};
+// use cfg_if::cfg_if;
 use prost::Message;
 
 // ****************************************************************************
@@ -32,7 +35,7 @@ fn impl_call(
     function: String,
     arg: Vec<u8>,
     call_coins: u64,
-) -> Result<Vec<u8>> {
+) -> Result<Vec<u8>, String> {
     // serialize the arguments with protobuf then length prefix it
     let arg_ptr = CallRequest {
         address: Some(Address { address }),
@@ -48,7 +51,7 @@ fn impl_call(
     let ret = get_parameters(ret_ptr);
 
     let Ok(response) = CallResponse::decode(ret.as_slice()) else {
-        return Err(anyhow!("Create SC response decode error"))
+        return Err("Create SC response decode error".to_string())
     };
 
     Ok(response.return_data)
@@ -57,38 +60,38 @@ fn impl_call(
 // ****************************************************************************
 // mocked version of the abi so one can dev and write tests without the need
 // to call the host
-cfg_if! {
-    if #[cfg(feature = "testing")] {
-        extern crate std;
-        use std::println;
+// cfg_if! {
+//     if #[cfg(feature = "testing")] {
+//         extern crate std;
+//         use std::println;
 
-        // Should we leave it up to the user to implement the mock?
-        // Should we mock at the abi_level?
-        // Can mockall do the job?
-        fn mock_call(
-            _address: String,
-            _function: String,
-            _arg: Vec<u8>,
-            _call_coins: u64,
-        ) -> Result<Vec<u8>>  {
-            println!("SC calld");
-            Ok(Vec::new())
-        }
-    }
-}
+//         // Should we leave it up to the user to implement the mock?
+//         // Should we mock at the abi_level?
+//         // Can mockall do the job?
+//         fn mock_call(
+//             _address: String,
+//             _function: String,
+//             _arg: Vec<u8>,
+//             _call_coins: u64,
+//         ) -> Result<Vec<u8>>  {
+//             println!("SC calld");
+//             Ok(Vec::new())
+//         }
+//     }
+// }
 
 pub fn call(
     address: String,
     function: String,
     arg: Vec<u8>,
     call_coins: u64,
-) -> Result<Vec<u8>> {
-    cfg_if! {
-        if #[cfg(feature = "testing")] {
-            mock_call(address, function, arg, call_coins)
-        }
-         else {
-            impl_call(address, function, arg, call_coins)
-        }
-    }
+) -> Result<Vec<u8>, String> {
+    // cfg_if! {
+    //     if #[cfg(feature = "testing")] {
+    //         mock_call(address, function, arg, call_coins)
+    //     }
+    //      else {
+    impl_call(address, function, arg, call_coins)
+    //     }
+    // }
 }

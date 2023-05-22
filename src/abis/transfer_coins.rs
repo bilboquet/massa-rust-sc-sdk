@@ -4,7 +4,7 @@ use crate::{
     allocator::EncodeLengthPrefixed,
 };
 
-use cfg_if::cfg_if;
+// use cfg_if::cfg_if;
 
 // ****************************************************************************
 // Function from the abi used by the SC
@@ -41,27 +41,27 @@ fn impl_transfer_coins(address: String, amount: u64) {
 // ****************************************************************************
 // mocked version of the abi so one can dev and write tests without the need
 // to call the host
-cfg_if! {
-    if #[cfg(feature = "testing")] {
-        extern crate std;
-        use std::println;
+// cfg_if! {
+//     if #[cfg(feature = "testing")] {
+//         extern crate std;
+//         use std::println;
 
-        // Should we leave it up to the user to implement the mock?
-        // Should we mock at the abi_level?
-        // Can mockall do the job?
-        fn mock_transfer_coins(address: String, amount: u64)  {
-            println!("Transfered {} coins to {}", amount, address);
-        }
-    }
-}
+//         // Should we leave it up to the user to implement the mock?
+//         // Should we mock at the abi_level?
+//         // Can mockall do the job?
+//         fn mock_transfer_coins(address: String, amount: u64)  {
+//             println!("Transfered {} coins to {}", amount, address);
+//         }
+//     }
+// }
 
 pub fn transfer_coins(to_address: String, raw_amount: u64) {
-    cfg_if! {
-        if #[cfg(feature = "testing")]    {
-            mock_transfer_coins(to_address, raw_amount)
-        }
-         else {
+    // cfg_if! {
+    //     if #[cfg(feature = "testing")]    {
+    //         mock_transfer_coins(to_address, raw_amount)
+    //     }
+    //      else {
             impl_transfer_coins(to_address, raw_amount)
-        }
-    }
+    //     }
+    // }
 }

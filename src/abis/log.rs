@@ -3,7 +3,7 @@ use crate::{
     allocator::EncodeLengthPrefixed,
 };
 
-use cfg_if::cfg_if;
+// use cfg_if::cfg_if;
 
 // ****************************************************************************
 // Function from the abi used by the SC
@@ -36,27 +36,27 @@ fn impl_log(arg: String) {
 // ****************************************************************************
 // mocked version of the abi so one can dev and write tests without the need
 // to call the host
-cfg_if! {
-    if #[cfg(feature = "testing")] {
-        extern crate std;
-        use std::println;
+// cfg_if! {
+//     if #[cfg(feature = "testing")] {
+//         extern crate std;
+//         use std::println;
 
-        // Should we leave it up to the user to implement the mock?
-        // Should we mock at the abi_level?
-        // Can mockall do the job?
-        fn mock_log(arg: String)  {
-            println!("{}", arg);
-        }
-    }
-}
+//         // Should we leave it up to the user to implement the mock?
+//         // Should we mock at the abi_level?
+//         // Can mockall do the job?
+//         fn mock_log(arg: String)  {
+//             println!("{}", arg);
+//         }
+//     }
+// }
 
 pub fn log(arg: String) {
-    cfg_if! {
-        if #[cfg(feature = "testing")]    {
-            mock_log(arg)
-        }
-         else {
+    // cfg_if! {
+    //     if #[cfg(feature = "testing")]    {
+    //         mock_log(arg)
+    //     }
+    //      else {
             impl_log(arg)
-        }
-    }
+    //     }
+    // }
 }
